@@ -1,51 +1,51 @@
 {
-  "updated": "2026-06-15T12:07:38.910Z",
+  "updated": "2026-06-15T12:11:11.348Z",
   "latest": {
     "draw": "26/064",
     "date": "2026-06-14",
     "main": [
-      3,
       10,
       12,
       17,
       29,
-      32
+      32,
+      35
     ],
-    "special": 5,
+    "special": 1,
     "waves": {
       "main": [
-        "blue",
         "blue",
         "red",
         "green",
         "red",
-        "green"
+        "green",
+        "red"
       ],
-      "special": "green"
+      "special": "red"
     }
   },
   "previous": {
     "draw": "26/063",
     "date": "2026-06-11",
     "main": [
-      2,
       3,
       6,
       9,
       10,
-      28
+      28,
+      29
     ],
-    "special": 9,
+    "special": 27,
     "waves": {
       "main": [
-        "red",
         "blue",
         "green",
         "blue",
         "blue",
-        "green"
+        "green",
+        "red"
       ],
-      "special": "blue"
+      "special": "green"
     }
   },
   "history": [
@@ -53,96 +53,96 @@
       "draw": "26/064",
       "date": "2026-06-14",
       "main": [
-        3,
         10,
         12,
         17,
         29,
-        32
+        32,
+        35
       ],
-      "special": 5,
+      "special": 1,
       "waves": {
         "main": [
-          "blue",
           "blue",
           "red",
           "green",
           "red",
-          "green"
+          "green",
+          "red"
         ],
-        "special": "green"
+        "special": "red"
       }
     },
     {
       "draw": "26/063",
       "date": "2026-06-11",
       "main": [
-        2,
         3,
         6,
         9,
         10,
-        28
+        28,
+        29
       ],
-      "special": 9,
+      "special": 27,
       "waves": {
         "main": [
-          "red",
           "blue",
           "green",
           "blue",
           "blue",
-          "green"
+          "green",
+          "red"
         ],
-        "special": "blue"
+        "special": "green"
       }
     },
     {
       "draw": "26/062",
       "date": "2026-06-09",
       "main": [
-        4,
         8,
         11,
         14,
         26,
-        33
+        33,
+        40
       ],
-      "special": 0,
+      "special": 30,
       "waves": {
         "main": [
-          "blue",
           "red",
           "green",
           "blue",
           "blue",
-          "green"
+          "green",
+          "red"
         ],
-        "special": "green"
+        "special": "red"
       }
     },
     {
       "draw": "26/061",
       "date": "2026-06-06",
       "main": [
-        3,
         5,
         12,
         19,
         20,
-        34
+        34,
+        36
       ],
-      "special": 6,
+      "special": 46,
       "waves": {
         "main": [
-          "blue",
           "green",
           "red",
           "red",
           "blue",
-          "red"
+          "red",
+          "blue"
         ],
-        "special": "green"
+        "special": "red"
       }
     },
     {
@@ -150,47 +150,47 @@
       "date": "2026-06-04",
       "main": [
         4,
-        4,
         7,
         15,
         37,
-        43
+        43,
+        47
       ],
-      "special": 7,
+      "special": 44,
       "waves": {
         "main": [
-          "blue",
           "blue",
           "red",
           "blue",
           "blue",
-          "green"
+          "green",
+          "blue"
         ],
-        "special": "red"
+        "special": "green"
       }
     },
     {
       "draw": "26/059",
       "date": "2026-06-02",
       "main": [
-        4,
         9,
         14,
         16,
         35,
-        37
+        37,
+        45
       ],
-      "special": 5,
+      "special": 20,
       "waves": {
         "main": [
           "blue",
           "blue",
-          "blue",
           "green",
           "red",
-          "blue"
+          "blue",
+          "red"
         ],
-        "special": "green"
+        "special": "blue"
       }
     },
     {
@@ -198,45 +198,45 @@
       "date": "2026-05-30",
       "main": [
         1,
-        4,
         12,
         21,
         39,
-        40
+        40,
+        41
       ],
-      "special": 1,
+      "special": 42,
       "waves": {
         "main": [
           "red",
-          "blue",
           "red",
           "green",
           "green",
-          "red"
+          "red",
+          "blue"
         ],
-        "special": "red"
+        "special": "blue"
       }
     },
     {
       "draw": "26/057",
       "date": "2026-05-28",
       "main": [
-        4,
         7,
         13,
         25,
         35,
-        40
+        40,
+        43
       ],
-      "special": 3,
+      "special": 47,
       "waves": {
         "main": [
-          "blue",
           "red",
           "red",
           "blue",
           "red",
-          "red"
+          "red",
+          "green"
         ],
         "special": "blue"
       }
@@ -245,24 +245,24 @@
       "draw": "26/056",
       "date": "2026-05-26",
       "main": [
-        4,
         10,
         11,
         18,
         32,
-        34
+        34,
+        47
       ],
-      "special": 7,
+      "special": 33,
       "waves": {
         "main": [
-          "blue",
           "blue",
           "green",
           "red",
           "green",
-          "red"
+          "red",
+          "blue"
         ],
-        "special": "red"
+        "special": "green"
       }
     },
     {
@@ -270,23 +270,23 @@
       "date": "2026-05-23",
       "main": [
         2,
-        4,
         7,
         20,
         42,
-        47
+        47,
+        49
       ],
-      "special": 9,
+      "special": 8,
       "waves": {
         "main": [
           "red",
-          "blue",
           "red",
           "blue",
           "blue",
-          "blue"
+          "blue",
+          "green"
         ],
-        "special": "blue"
+        "special": "red"
       }
     }
   ]
