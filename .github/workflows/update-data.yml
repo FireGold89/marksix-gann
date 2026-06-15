@@ -1,9 +1,9 @@
 name: Update Mark Six Data
 on:
-  schedule:
-    # 香港時間 (UTC+8) 週二/四/六晚 ~22:30 = UTC 14:30（攪珠21:30後一小時）
-    - cron: '30 14 * * 2,4,6'
-  workflow_dispatch:
+  # 自動排程暫時停用，待抓取格式驗證正確後再啟用
+  # schedule:
+  #   - cron: '30 14 * * 2,4,6'
+  workflow_dispatch:   # 只允許手動觸發（測試用）
 
 jobs:
   update:
@@ -22,10 +22,9 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           if git diff --quiet data.json; then
-            echo "No data changes — nothing to deploy"
+            echo "No data changes"
           else
             git add data.json
             git commit -m "Auto-update Mark Six data"
             git push
-            echo "✓ Data updated — Vercel deploy will trigger automatically"
           fi
