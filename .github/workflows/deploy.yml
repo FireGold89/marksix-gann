@@ -3,25 +3,18 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
+# 確保同時間只有一個部署，避免衝突
+concurrency:
+  group: vercel-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Install Vercel CLI
         run: npm install -g vercel
       - name: Deploy to Vercel
-        id: deploy
-        run: |
-          URL=$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }})
-          echo "DEPLOY_URL=$URL" >> $GITHUB_ENV
-          echo "$URL" > DEPLOYMENT_URL.txt
-      - name: Commit URL
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add DEPLOYMENT_URL.txt
-          git commit -m "Deployment URL [skip ci]" || echo "no change"
-          git push
+        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
