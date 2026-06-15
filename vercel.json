@@ -1,1 +1,8 @@
-{"version":2}
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/gann", "destination": "/gann.html" },
+    { "source": "/fan", "destination": "/fan.html" }
+  ]
+}

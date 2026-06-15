@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>范氏圖表 — 六合彩九宮洛書研究法</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal:#00d4c8; --teal-light:#7ffff4; --white:#fff;
+  --card-bg:rgba(255,255,255,0.10); --card-border:rgba(255,255,255,0.20);
+  --gold:#ffd700;
+}
+body {
+  min-height:100vh;
+  background:linear-gradient(135deg,#3d1578 0%,#6b2fa0 30%,#9b3fc0 55%,#5b8fce 80%,#2ad4c8 100%);
+  font-family:'Helvetica Neue',Arial,'PingFang TC','Microsoft JhengHei',sans-serif;
+  display:flex; flex-direction:column; align-items:center;
+  padding:24px 12px 48px; overflow-x:hidden; position:relative;
+}
+#sparkle-canvas { position:fixed; inset:0; pointer-events:none; z-index:0; }
+.content { position:relative; z-index:1; width:100%; max-width:480px; display:flex; flex-direction:column; align-items:center; gap:16px; }
+
+/* Back link */
+.back-link { align-self:flex-start; font-size:.72rem; color:var(--teal-light); text-decoration:none; opacity:.85; display:flex; align-items:center; gap:5px; padding:4px 0; }
+.back-link:hover { opacity:1; }
+
+/* Header */
+.header-card { width:100%; background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:18px 20px 14px; text-align:center; backdrop-filter:blur(10px); box-shadow:0 4px 32px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15); }
+.header-eyebrow { font-size:.65rem; letter-spacing:.25em; text-transform:uppercase; color:var(--teal-light); margin-bottom:6px; opacity:.85; }
+.header-title { font-size:clamp(1.8rem,5.5vw,2.4rem); font-weight:900; color:var(--white); letter-spacing:.05em; text-shadow:0 0 20px rgba(255,215,0,.4),0 2px 4px rgba(0,0,0,.4); line-height:1.1; }
+.header-title span { color:var(--gold); }
+.header-period { margin-top:6px; font-size:.78rem; color:rgba(255,255,255,.7); letter-spacing:.05em; }
+
+/* Intro card */
+.intro-card { width:100%; background:rgba(255,215,0,.06); border:1px solid rgba(255,215,0,.25); border-left:3px solid var(--gold); border-radius:14px; padding:14px 16px; font-size:.74rem; color:rgba(255,255,255,.75); line-height:1.75; backdrop-filter:blur(8px); }
+.intro-card strong { color:#ffe066; }
+.intro-card .src-link { color:var(--teal-light); text-decoration:none; border-bottom:1px dotted var(--teal-light); }
+
+/* Draw card */
+.draw-card { width:100%; background:var(--card-bg); border:1px solid var(--card-border); border-radius:18px; padding:14px 16px; backdrop-filter:blur(10px); box-shadow:0 4px 24px rgba(0,0,0,.2); }
+.draw-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.draw-label { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--teal-light); opacity:.85; }
+.draw-period-tag { font-size:.62rem; background:rgba(0,212,200,.2); border:1px solid rgba(0,212,200,.4); color:var(--teal-light); border-radius:20px; padding:2px 10px; }
+.balls-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:center; }
+.ball { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:.85rem; position:relative; flex-shrink:0; color:#fff; }
+.ball::after { content:''; position:absolute; top:6px; left:9px; width:12px; height:6px; background:rgba(255,255,255,.38); border-radius:50%; transform:rotate(-30deg); }
+.ball.bwave-red { background:radial-gradient(circle at 38% 30%,#ff5555,#cc0000,#7a0000); box-shadow:0 0 12px rgba(232,0,26,.6); }
+.ball.bwave-blue { background:radial-gradient(circle at 38% 30%,#5599ff,#0055cc,#003399); box-shadow:0 0 12px rgba(0,85,204,.6); }
+.ball.bwave-green { background:radial-gradient(circle at 38% 30%,#44cc44,#008000,#004d00); box-shadow:0 0 12px rgba(0,128,0,.6); }
+.ball.special-ball { outline:3px solid var(--gold); outline-offset:2px; }
+.plus { color:rgba(255,255,255,.5); font-size:1.1rem; padding:0 2px; }
+.draw-note { font-size:.62rem; color:rgba(255,255,255,.45); text-align:center; margin-top:8px; }
+
+/* Center number selector */
+.selector-card { width:100%; background:rgba(255,215,0,.08); border:1.5px solid rgba(255,215,0,.4); border-radius:18px; padding:16px; backdrop-filter:blur(10px); box-shadow:0 0 30px rgba(255,215,0,.08); }
+.selector-label { font-size:.72rem; font-weight:700; color:#ffe066; text-align:center; margin-bottom:4px; }
+.selector-hint { font-size:.62rem; color:rgba(255,255,255,.5); text-align:center; margin-bottom:12px; }
+.selector-current { text-align:center; margin-bottom:12px; }
+.selector-current .big-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:60px; height:60px; border-radius:50%;
+  font-size:1.6rem; font-weight:900; color:#fff; position:relative;
+  box-shadow:0 0 20px rgba(255,215,0,.5);
+}
+.selector-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.sel-cell {
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  font-size:.72rem; font-weight:700; border-radius:7px; cursor:pointer;
+  background:rgba(255,255,255,.08); color:rgba(255,255,255,.8);
+  border:1px solid rgba(255,255,255,.12); transition:all .12s; user-select:none;
+}
+.sel-cell:hover { background:rgba(255,215,0,.3); transform:scale(1.1); }
+.sel-cell.active { background:linear-gradient(135deg,#ffe066,#ffaa00); color:#3a1a00; font-weight:900; box-shadow:0 0 12px rgba(255,180,0,.7); border:none; }
+
+/* Grid card */
+.grid-card { width:100%; background:rgba(255,255,255,.07); border:1px solid var(--card-border); border-radius:20px; padding:18px 14px 16px; backdrop-filter:blur(12px); box-shadow:0 8px 40px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.12); }
+.grid-label { text-align:center; font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:12px; }
+
+#fan-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; width:100%; aspect-ratio:1/1; }
+.fcell {
+  aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  font-size:clamp(.65rem,2.4vw,.9rem); font-weight:700; border-radius:8px;
+  background:rgba(255,255,255,.06); color:rgba(255,255,255,.85);
+  border:1px solid rgba(255,255,255,.08); position:relative; transition:transform .15s;
+  user-select:none; overflow:hidden;
+}
+.fcell:hover { transform:scale(1.12); z-index:10; }
+
+/* Center number — purple/teal pulse */
+.fcell.center {
+  background:radial-gradient(circle at 40% 32%,#d896ff,#8b2fc9,#5a1a85);
+  color:#fff; border:none; border-radius:50%; font-weight:900;
+  box-shadow:0 0 18px rgba(180,80,255,.9),0 0 36px rgba(140,40,200,.5);
+  animation:centerPulse 1.8s ease-in-out infinite; z-index:5;
+}
+@keyframes centerPulse { 0%,100%{box-shadow:0 0 18px rgba(180,80,255,.9),0 0 30px rgba(140,40,200,.5)} 50%{box-shadow:0 0 28px rgba(200,120,255,1),0 0 50px rgba(160,60,220,.7)} }
+
+/* Yellow = today's prediction (radiation path) */
+.fcell.predict {
+  background:linear-gradient(135deg,#ffe066,#ffc200,#ffaa00);
+  color:#3a1a00; font-weight:900; border:none;
+  box-shadow:0 0 8px rgba(255,200,0,.5),inset 0 1px 0 rgba(255,255,255,.4);
+  text-shadow:0 1px 0 rgba(255,255,255,.3);
+}
+
+/* Red = last period jackpot number */
+.fcell.last {
+  background:radial-gradient(circle at 40% 32%,#ff5555,#cc0000,#7a0000);
+  color:#fff; font-weight:900; border:none; border-radius:50%;
+  box-shadow:0 0 12px rgba(232,0,26,.8),0 0 24px rgba(232,0,26,.3);
+}
+.fcell.last::after { content:''; position:absolute; top:15%; left:20%; width:28%; height:20%; background:rgba(255,255,255,.3); border-radius:50%; transform:rotate(-30deg); }
+
+/* Circle = overlap (last jackpot ∩ today prediction) — high repeat chance */
+.fcell.overlap {
+  background:radial-gradient(circle at 40% 32%,#ff5555,#cc0000,#7a0000);
+  color:#fff; font-weight:900; border-radius:50%;
+  box-shadow:0 0 14px rgba(232,0,26,.8),0 0 28px rgba(232,0,26,.4);
+  outline:3px solid #ffe066; outline-offset:3px;
+  animation:overlapPulse 1.4s ease-in-out infinite;
+}
+.fcell.overlap::before {
+  content:''; position:absolute; inset:-3px; border-radius:50%;
+  border:2px solid rgba(255,255,255,.6); pointer-events:none;
+}
+@keyframes overlapPulse {
+  0%,100%{ outline-color:#ffe066; box-shadow:0 0 14px rgba(232,0,26,.8),0 0 28px rgba(255,215,0,.4); }
+  50%    { outline-color:#fff; box-shadow:0 0 22px rgba(232,0,26,1),0 0 44px rgba(255,215,0,.7); }
+}
+
+/* Legend */
+.legend { display:flex; flex-wrap:wrap; gap:8px 14px; justify-content:center; margin-top:14px; }
+.leg-item { display:flex; align-items:center; gap:5px; font-size:.66rem; color:rgba(255,255,255,.65); }
+.leg-dot { width:14px; height:14px; flex-shrink:0; }
+.leg-dot.center { border-radius:50%; background:radial-gradient(circle,#d896ff,#8b2fc9); box-shadow:0 0 5px rgba(180,80,255,.6); }
+.leg-dot.predict { border-radius:3px; background:linear-gradient(135deg,#ffe066,#ffaa00); box-shadow:0 0 5px rgba(255,180,0,.6); }
+.leg-dot.last { border-radius:50%; background:radial-gradient(circle,#ff5555,#cc0000); box-shadow:0 0 5px rgba(232,0,26,.6); }
+.leg-dot.overlap { border-radius:50%; background:radial-gradient(circle,#ff5555,#cc0000); outline:2px solid #ffe066; outline-offset:1px; }
+.leg-dot.normal { border-radius:3px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); }
+
+/* Prediction result card */
+.result-card { width:100%; background:linear-gradient(135deg,rgba(0,212,200,.1),rgba(255,215,0,.08)); border:1.5px solid rgba(255,215,0,.4); border-radius:20px; padding:18px 16px 16px; backdrop-filter:blur(12px); box-shadow:0 4px 32px rgba(0,0,0,.25),0 0 40px rgba(255,215,0,.07); }
+.result-header { display:flex; align-items:center; justify-content:center; gap:10px; font-size:1rem; font-weight:900; color:#ffd700; letter-spacing:.08em; margin-bottom:12px; text-shadow:0 0 12px rgba(255,215,0,.6); }
+.result-section-label { font-size:.68rem; font-weight:700; color:#ffd700; margin-bottom:10px; margin-top:14px; }
+.result-section-label:first-child { margin-top:0; }
+.overlap-balls { display:flex; flex-wrap:wrap; gap:10px; }
+.oball { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:.9rem; color:#fff; position:relative; outline:3px solid #ffe066; outline-offset:3px; animation:overlapPulse 1.4s ease-in-out infinite; }
+.oball::after { content:''; position:absolute; top:6px; left:9px; width:12px; height:7px; background:rgba(255,255,255,.35); border-radius:50%; transform:rotate(-30deg); }
+.oball.wave-red { background:radial-gradient(circle at 38% 30%,#ff6666,#cc0000,#7a0000); }
+.oball.wave-blue { background:radial-gradient(circle at 38% 30%,#66aaff,#0055cc,#003399); }
+.oball.wave-green { background:radial-gradient(circle at 38% 30%,#55dd55,#008000,#004d00); }
+.predict-balls-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+.cball { aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:clamp(.6rem,2.4vw,.82rem); color:#fff; position:relative; }
+.cball::after { content:''; position:absolute; top:12%; left:18%; width:28%; height:20%; background:rgba(255,255,255,.35); border-radius:50%; transform:rotate(-30deg); }
+.cball.wave-red { background:radial-gradient(circle at 38% 30%,#ff6666,#cc0000,#7a0000); box-shadow:0 0 8px rgba(232,0,26,.6); }
+.cball.wave-blue { background:radial-gradient(circle at 38% 30%,#66aaff,#0055cc,#003399); box-shadow:0 0 8px rgba(0,85,204,.6); }
+.cball.wave-green { background:radial-gradient(circle at 38% 30%,#55dd55,#008000,#004d00); box-shadow:0 0 8px rgba(0,160,0,.6); }
+.result-note { font-size:.6rem; color:rgba(255,255,255,.35); line-height:1.6; margin-top:14px; border-top:1px solid rgba(255,255,255,.08); padding-top:10px; text-align:center; }
+
+footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-height:1.9; margin-top:4px; }
+</style>
+</head>
+<body>
+<canvas id="sparkle-canvas"></canvas>
+<div class="content">
+
+  <a class="back-link" href="/">← 返回主頁</a>
+
+  <div class="header-card">
+    <p class="header-eyebrow">Hong Kong Mark Six · 九宮洛書研究法</p>
+    <h1 class="header-title">范氏<span>圖表</span></h1>
+    <p class="header-period">第 064 期預測 ／ 重心號碼放射法</p>
+  </div>
+
+  <div class="intro-card">
+    <strong>📜 范氏圖表簡介：</strong><br>
+    源自中國著名的「<strong>九宮洛書盤</strong>」—— 一個 3×3 九宮格，中央為 5。放大至 7×7 共 49 格，中央放 5 的二次方（<strong>25</strong>）。號碼由 01 開始，由右至左、由下至上斜升排列，遇 7 的倍數換行。整個圖表是一個完美幻方（每行、列、對角線之和皆為 175）。<br><br>
+    <strong>🎯 使用方法：</strong>選一個你最喜歡的號碼作「<strong>重心號碼</strong>」，向直、橫、斜八個方向放射。<span style="color:#ffe066">黃色</span>為今期預測，<span style="color:#ff6b6b">紅色</span>為上期頭獎號碼，<strong>圓圈號碼</strong>是兩者重疊 —— 重複開出機會較高！
+  </div>
+
+  <!-- Last period result -->
+  <div class="draw-card">
+    <div class="draw-top">
+      <span class="draw-label">上期頭獎號碼</span>
+      <span class="draw-period-tag">26/063 · 2026年6月11日</span>
+    </div>
+    <div class="balls-row">
+      <div class="ball bwave-blue">03</div>
+      <div class="ball bwave-green">06</div>
+      <div class="ball bwave-blue">09</div>
+      <div class="ball bwave-blue">10</div>
+      <div class="ball bwave-green">28</div>
+      <div class="ball bwave-red">29</div>
+    </div>
+    <p class="draw-note">＊ 范氏圖表只研究頭獎號碼，不計特別號碼</p>
+  </div>
+
+  <!-- Center number selector -->
+  <div class="selector-card">
+    <p class="selector-label">🎯 選擇你的「重心號碼」</p>
+    <p class="selector-hint">點選任何號碼作為放射中心（預設 25）</p>
+    <div class="selector-current">
+      <div class="big-num" id="current-center"></div>
+    </div>
+    <div class="selector-grid" id="selector-grid"></div>
+  </div>
+
+  <!-- Fan chart grid -->
+  <div class="grid-card">
+    <p class="grid-label">范氏圖表 · 九宮洛書 7×7 幻方（中心 25 = 5²）</p>
+    <div id="fan-grid"></div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot center"></div>重心號碼（紫色）</div>
+      <div class="leg-item"><div class="leg-dot predict"></div>今期預測（黃色放射）</div>
+      <div class="leg-item"><div class="leg-dot last"></div>上期頭獎（紅色）</div>
+      <div class="leg-item"><div class="leg-dot overlap"></div>重疊圓圈（重複機會高）</div>
+      <div class="leg-item"><div class="leg-dot normal"></div>普通號碼</div>
+    </div>
+  </div>
+
+  <!-- Prediction result -->
+  <div class="result-card">
+    <div class="result-header">✦ 第064期 范氏預測 ✦</div>
+
+    <div class="result-section-label">🔴⭕ 重疊號碼（重複開出機會最高）</div>
+    <div id="overlap-balls" class="overlap-balls"></div>
+
+    <div class="result-section-label">🟡 全部放射預測號碼（共 <span id="predict-count">0</span> 個）</div>
+    <div id="predict-balls" class="predict-balls-grid"></div>
+
+    <p class="result-note">⚠️ 范氏圖表純屬娛樂及教學參考，六合彩為隨機遊戲，重心號碼不同，預測結果亦不同。請理性投注。</p>
+  </div>
+
+  <footer>
+    范氏圖表研究法 · 由范氏朋友與強哥共同研究<br>
+    資料來源：香港賽馬會官方攪珠結果 ｜ 僅供參考及教學用途
+  </footer>
+
+</div>
+
+<script>
+/* ── SPARKLE CANVAS ── */
+(function(){
+  const canvas=document.getElementById('sparkle-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const COLORS=['#ffffff','#b8f7f5','#ffd700','#00d4c8','#ff9de2','#a78bfa','#5599ff','#44cc44'];
+  class Sparkle{
+    constructor(){ this.reset(true); }
+    reset(init){
+      this.x=Math.random()*W; this.y=init?Math.random()*H:H+10;
+      this.size=Math.random()*3+0.5; this.opacity=0;
+      this.maxOpacity=Math.random()*.8+.2; this.speed=Math.random()*.4+.1;
+      this.drift=(Math.random()-.5)*.3; this.twinkleSpeed=Math.random()*.04+.01;
+      this.twinkleOffset=Math.random()*Math.PI*2;
+      this.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+      this.type=Math.random()<.6?'dot':'star';
+      this.rotation=Math.random()*Math.PI*2; this.rotSpeed=(Math.random()-.5)*.05;
+      this.life=0; this.maxLife=Math.random()*200+100;
+    }
+    update(t){
+      this.life++; this.y-=this.speed; this.x+=this.drift; this.rotation+=this.rotSpeed;
+      const tOp=this.maxOpacity*(.5+.5*Math.sin(t*this.twinkleSpeed+this.twinkleOffset));
+      if(this.life<40) this.opacity=tOp*(this.life/40);
+      else if(this.life>this.maxLife-40) this.opacity=tOp*((this.maxLife-this.life)/40);
+      else this.opacity=tOp;
+      if(this.life>this.maxLife||this.y<-10) this.reset(false);
+    }
+    draw(ctx){
+      ctx.save(); ctx.globalAlpha=Math.max(0,this.opacity);
+      ctx.translate(this.x,this.y); ctx.rotate(this.rotation); ctx.fillStyle=this.color;
+      if(this.type==='dot'){
+        ctx.beginPath(); ctx.arc(0,0,this.size,0,Math.PI*2); ctx.fill();
+        ctx.globalAlpha=Math.max(0,this.opacity*.3);
+        ctx.beginPath(); ctx.arc(0,0,this.size*2.5,0,Math.PI*2); ctx.fill();
+      } else {
+        const s=this.size*1.5;
+        ctx.beginPath();
+        ctx.moveTo(0,-s*2); ctx.lineTo(s*.4,-s*.4); ctx.lineTo(s*2,0);
+        ctx.lineTo(s*.4,s*.4); ctx.lineTo(0,s*2); ctx.lineTo(-s*.4,s*.4);
+        ctx.lineTo(-s*2,0); ctx.lineTo(-s*.4,-s*.4); ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  const sparkles=Array.from({length:130},()=>new Sparkle());
+  let t=0;
+  function loop(){ ctx.clearRect(0,0,W,H); t++; sparkles.forEach(s=>{s.update(t);s.draw(ctx);}); requestAnimationFrame(loop); }
+  loop();
+})();
+
+/* ── WAVE COLOUR MAP ── */
+const RED_NUMS=new Set([1,2,7,8,12,13,18,19,23,24,29,30,34,35,40,45,46]);
+const BLUE_NUMS=new Set([3,4,9,10,14,15,20,25,26,31,36,37,41,42,47,48]);
+const GREEN_NUMS=new Set([5,6,11,16,17,21,22,27,28,32,33,38,39,43,44,49]);
+function waveClass(n){
+  if(RED_NUMS.has(n)) return 'wave-red';
+  if(BLUE_NUMS.has(n)) return 'wave-blue';
+  if(GREEN_NUMS.has(n)) return 'wave-green';
+  return '';
+}
+
+/* ── FAN CHART (九宮洛書 7×7 幻方) ──
+   中心25, 01在底行中央, 由下至上斜升, 完美幻方(每行列和=175) */
+const FAN = [
+  [22,31,40,49, 2,11,20],
+  [21,23,32,41,43, 3,12],
+  [13,15,24,33,42,44, 4],
+  [ 5,14,16,25,34,36,45],
+  [46, 6, 8,17,26,35,37],
+  [38,47, 7, 9,18,27,29],
+  [30,39,48, 1,10,19,28]
+];
+const SIZE=7;
+const pos={};
+for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) pos[FAN[r][c]]={r,c};
+
+/* Last period jackpot (063) — main numbers only */
+const lastJackpot = new Set([3,6,9,10,28,29]);
+
+/* Radiate from center in 8 directions */
+function radiate(centerNum){
+  const {r:cr,c:cc} = pos[centerNum];
+  const result = new Set([centerNum]);
+  const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+  for(const [dr,dc] of dirs){
+    let r=cr+dr, c=cc+dc;
+    while(r>=0&&r<SIZE&&c>=0&&c<SIZE){
+      result.add(FAN[r][c]);
+      r+=dr; c+=dc;
+    }
+  }
+  return result;
+}
+
+let centerNum = 25; // default center
+
+function render(){
+  const predict = radiate(centerNum);
+  const overlap = [...lastJackpot].filter(n => predict.has(n)).sort((a,b)=>a-b);
+
+  /* Render main fan grid */
+  const fanGrid = document.getElementById('fan-grid');
+  fanGrid.innerHTML = '';
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      const div=document.createElement('div');
+      div.className='fcell';
+      const n=FAN[r][c];
+      div.textContent=String(n).padStart(2,'0');
+
+      const isCenter = n===centerNum;
+      const isPredict = predict.has(n);
+      const isLast = lastJackpot.has(n);
+      const isOverlap = isPredict && isLast;
+
+      if(isCenter){
+        div.classList.add('center');
+      } else if(isOverlap){
+        div.classList.add('overlap');
+      } else if(isLast){
+        div.classList.add('last');
+      } else if(isPredict){
+        div.classList.add('predict');
+      }
+      fanGrid.appendChild(div);
+    }
+  }
+
+  /* Update current center display */
+  const cc = document.getElementById('current-center');
+  cc.textContent = String(centerNum).padStart(2,'0');
+  cc.className = 'big-num';
+  const wc = waveClass(centerNum);
+  const grad = wc==='wave-red' ? 'radial-gradient(circle at 38% 30%,#ff6666,#cc0000,#7a0000)'
+            : wc==='wave-blue' ? 'radial-gradient(circle at 38% 30%,#66aaff,#0055cc,#003399)'
+            : 'radial-gradient(circle at 38% 30%,#55dd55,#008000,#004d00)';
+  cc.style.background = grad;
+
+  /* Render overlap balls */
+  const overlapEl = document.getElementById('overlap-balls');
+  overlapEl.innerHTML = '';
+  if(overlap.length===0){
+    overlapEl.innerHTML='<span style="font-size:.74rem;color:rgba(255,255,255,.5)">此重心號碼無重疊號碼，試試其他號碼</span>';
+  } else {
+    overlap.forEach(n=>{
+      const d=document.createElement('div');
+      d.className='oball '+waveClass(n);
+      d.textContent=String(n).padStart(2,'0');
+      overlapEl.appendChild(d);
+    });
+  }
+
+  /* Render all prediction balls */
+  const predictEl = document.getElementById('predict-balls');
+  predictEl.innerHTML = '';
+  const sortedPredict = [...predict].sort((a,b)=>a-b);
+  document.getElementById('predict-count').textContent = sortedPredict.length;
+  sortedPredict.forEach(n=>{
+    const d=document.createElement('div');
+    d.className='cball '+waveClass(n);
+    d.textContent=String(n).padStart(2,'0');
+    predictEl.appendChild(d);
+  });
+
+  /* Update selector active state */
+  document.querySelectorAll('.sel-cell').forEach(el=>{
+    el.classList.toggle('active', parseInt(el.dataset.num)===centerNum);
+  });
+}
+
+/* Build selector grid (same layout as fan chart) */
+const selGrid = document.getElementById('selector-grid');
+for(let r=0;r<SIZE;r++){
+  for(let c=0;c<SIZE;c++){
+    const n=FAN[r][c];
+    const div=document.createElement('div');
+    div.className='sel-cell';
+    div.dataset.num=n;
+    div.textContent=String(n).padStart(2,'0');
+    div.addEventListener('click',()=>{ centerNum=n; render(); });
+    selGrid.appendChild(div);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
