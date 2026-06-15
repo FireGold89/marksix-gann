@@ -1,0 +1,33 @@
+name: Update Mark Six Data
+on:
+  schedule:
+    # 香港時間 (UTC+8) 週二/四/六晚上約 22:00 = UTC 14:00
+    # 攪珠約 21:30，留半小時緩衝
+    - cron: '0 14 * * 2,4,6'
+  workflow_dispatch:   # 允許手動觸發
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Fetch latest Mark Six results
+        run: node fetch-marksix.js
+        continue-on-error: true
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          if git diff --quiet data.json; then
+            echo "No data changes"
+          else
+            git add data.json
+            git commit -m "Auto-update Mark Six data [skip ci]"
+            git push
+            echo "Data updated and pushed"
+          fi

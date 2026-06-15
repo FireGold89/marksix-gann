@@ -170,7 +170,7 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
   <div class="header-card">
     <p class="header-eyebrow">Hong Kong Mark Six · 九宮洛書研究法</p>
     <h1 class="header-title">范氏<span>圖表</span></h1>
-    <p class="header-period">第 064 期預測 ／ 重心號碼放射法</p>
+    <p class="header-period" id="fan-period">重心號碼放射法</p>
   </div>
 
   <div class="intro-card">
@@ -183,16 +183,9 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
   <div class="draw-card">
     <div class="draw-top">
       <span class="draw-label">上期頭獎號碼</span>
-      <span class="draw-period-tag">26/063 · 2026年6月11日</span>
+      <span class="draw-period-tag" id="fan-draw-tag">—</span>
     </div>
-    <div class="balls-row">
-      <div class="ball bwave-blue">03</div>
-      <div class="ball bwave-green">06</div>
-      <div class="ball bwave-blue">09</div>
-      <div class="ball bwave-blue">10</div>
-      <div class="ball bwave-green">28</div>
-      <div class="ball bwave-red">29</div>
-    </div>
+    <div class="balls-row" id="fan-draw-balls"></div>
     <p class="draw-note">＊ 范氏圖表只研究頭獎號碼，不計特別號碼</p>
   </div>
 
@@ -221,7 +214,7 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
 
   <!-- Prediction result -->
   <div class="result-card">
-    <div class="result-header">✦ 第064期 范氏預測 ✦</div>
+    <div class="result-header" id="fan-result-header">✦ 范氏預測 ✦</div>
 
     <div class="result-section-label">🔴⭕ 重疊號碼（重複開出機會最高）</div>
     <div id="overlap-balls" class="overlap-balls"></div>
@@ -318,8 +311,8 @@ const SIZE=7;
 const pos={};
 for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) pos[FAN[r][c]]={r,c};
 
-/* Last period jackpot (063) — main numbers only */
-const lastJackpot = new Set([3,6,9,10,28,29]);
+/* Last period jackpot — main numbers only (loaded from data.json) */
+let lastJackpot = new Set([3,6,9,10,28,29]); // fallback default
 
 /* Radiate from center in 8 directions */
 function radiate(centerNum){
@@ -426,7 +419,47 @@ for(let r=0;r<SIZE;r++){
   }
 }
 
-render();
+/* ── Load latest data from data.json ── */
+function ballWaveClass(n){
+  const w = waveClass(n);
+  return w === 'wave-red' ? 'bwave-red' : w === 'wave-blue' ? 'bwave-blue' : 'bwave-green';
+}
+async function initFan(){
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    const data = await res.json();
+    const latest = data.latest;
+
+    // Update last jackpot set (main numbers only — Fan chart ignores special)
+    lastJackpot = new Set(latest.main);
+
+    // Header period + next period
+    const num = latest.draw.split('/')[1];
+    const nextNum = String(parseInt(num) + 1).padStart(3,'0');
+    const [y,m,d] = latest.date.split('-');
+    document.getElementById('fan-period').textContent =
+      `第 ${nextNum} 期預測 ／ 重心號碼放射法`;
+    document.getElementById('fan-result-header').textContent =
+      `✦ 第${nextNum}期 范氏預測 ✦`;
+
+    // Draw card
+    document.getElementById('fan-draw-tag').textContent =
+      `${latest.draw} · ${y}年${parseInt(m)}月${parseInt(d)}日`;
+    const ballsEl = document.getElementById('fan-draw-balls');
+    ballsEl.innerHTML = '';
+    latest.main.forEach(n => {
+      const b = document.createElement('div');
+      b.className = 'ball ' + ballWaveClass(n);
+      b.textContent = String(n).padStart(2,'0');
+      ballsEl.appendChild(b);
+    });
+  } catch(e) {
+    console.error('Failed to load data.json, using defaults', e);
+  }
+  render();
+}
+
+initFan();
 </script>
 </body>
 </html>

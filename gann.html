@@ -469,27 +469,20 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
 
 <div class="content">
 
+  <a class="back-link" href="/" style="align-self:flex-start;font-size:.72rem;color:var(--teal-light);text-decoration:none;opacity:.85;padding:4px 0;">← 返回主頁</a>
+
   <div class="header-card">
     <p class="header-eyebrow">Hong Kong Mark Six · 香港六合彩</p>
     <h1 class="header-title">江恩<span>螺旋</span>方圖</h1>
-    <p class="header-period">第 063 期 ／ 2026年6月11日（星期四）</p>
+    <p class="header-period" id="latest-period">載入中…</p>
   </div>
 
   <div class="draw-card">
     <div class="draw-top">
       <span class="draw-label">攪珠號碼</span>
-      <span class="draw-period-tag">26/063</span>
+      <span class="draw-period-tag" id="latest-tag">—</span>
     </div>
-    <div class="balls-row">
-      <div class="ball bwave-blue">03</div>
-      <div class="ball bwave-green">06</div>
-      <div class="ball bwave-blue">09</div>
-      <div class="ball bwave-blue">10</div>
-      <div class="ball bwave-green">28</div>
-      <div class="ball bwave-red">29</div>
-      <span class="plus">＋</span>
-      <div class="ball bwave-green special-ball">27</div>
-    </div>
+    <div class="balls-row" id="latest-balls"></div>
     <div class="wave-legend">
       <div class="wave-leg"><div class="wave-dot r"></div>紅波</div>
       <div class="wave-leg"><div class="wave-dot b"></div>藍波</div>
@@ -521,23 +514,13 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
     <span>再上期結果</span>
   </div>
 
-  <!-- 062 Draw result -->
+  <!-- Previous Draw result -->
   <div class="draw-card">
     <div class="draw-top">
       <span class="draw-label">攪珠號碼</span>
-      <span class="draw-period-tag">26/062 · 2026年6月9日（星期二）</span>
+      <span class="draw-period-tag" id="prev-tag">—</span>
     </div>
-    <div class="balls-row">
-      <!-- 08=紅, 11=綠, 14=藍, 26=藍, 33=綠, 40=紅 + Special 30=紅 -->
-      <div class="ball bwave-red">08</div>
-      <div class="ball bwave-green">11</div>
-      <div class="ball bwave-blue">14</div>
-      <div class="ball bwave-blue">26</div>
-      <div class="ball bwave-green">33</div>
-      <div class="ball bwave-red">40</div>
-      <span class="plus">＋</span>
-      <div class="ball bwave-red special-ball">30</div>
-    </div>
+    <div class="balls-row" id="prev-balls"></div>
     <div class="wave-legend">
       <div class="wave-leg"><div class="wave-dot r"></div>紅波</div>
       <div class="wave-leg"><div class="wave-dot b"></div>藍波</div>
@@ -547,7 +530,7 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
 
   <!-- 062 Gann Grid -->
   <div class="grid-card">
-    <p class="grid-label">第062期 江恩螺旋方圖 · 金色預測 vs 063期實際結果核實</p>
+    <p class="grid-label" id="prev-grid-label">上期 江恩螺旋方圖 · 金色預測 vs 本期實際結果核實</p>
     <div id="spiral-grid-062"></div>
     <div class="legend">
       <div class="leg-item"><div class="leg-dot r"></div>紅波頭獎號碼</div>
@@ -564,7 +547,7 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
 
   <!-- Score card: 062 prediction vs 063 actual -->
   <div class="score-card">
-    <div class="score-title">📊 預測核實 — 062期預測 vs 063期實際結果</div>
+    <div class="score-title" id="verify-score-title">📊 預測核實 — 載入中…</div>
     <div id="verify-score"></div>
   </div>
 
@@ -577,15 +560,15 @@ footer { font-size:.6rem; color:rgba(255,255,255,.4); text-align:center; line-he
   <div class="predict-card">
     <div class="predict-header">
       <span class="predict-icon">✦</span>
-      <span>第064期候選號碼</span>
+      <span id="predict-title">下期候選號碼</span>
       <span class="predict-icon">✦</span>
     </div>
-    <p class="predict-subtitle">根據第063期江恩螺旋藍色範圍，以下號碼下期開出機會率較高</p>
+    <p class="predict-subtitle" id="predict-subtitle">根據本期江恩螺旋藍色範圍，以下號碼下期開出機會率較高</p>
 
     <div class="predict-section-label">🟡 金色預測範圍候選（共 <span id="candidate-count">0</span> 個）</div>
     <div id="predict-balls" class="predict-balls-grid"></div>
 
-    <div class="predict-section-label" style="margin-top:16px;">🟠 重複開出候選（不在063期藍區的紅色號碼）</div>
+    <div class="predict-section-label" style="margin-top:16px;">🟠 重複開出候選（不在本期藍區的紅色號碼）</div>
     <div id="predict-repeat" class="balls-row" style="gap:8px; flex-wrap:wrap;"></div>
 
     <p class="predict-note">⚠️ 純屬娛樂及教學參考，六合彩為隨機遊戲，請理性投注。</p>
@@ -733,62 +716,46 @@ function renderGrid(containerId, mainSet, special, verifySet=null) {
   return { blueNums, hits, misses };
 }
 
-/* ── RENDER 063 GRID (no verify needed — it's the latest) ── */
-const result063 = renderGrid('spiral-grid', new Set([3,6,9,10,28,29]), 27);
-const blue063 = result063.blueNums;
-
-/* ── RENDER 062 GRID with 063 actual results as verification ── */
-const actual063 = new Set([3,6,9,10,28,29]);
-const result062 = renderGrid('spiral-grid-062', new Set([8,11,14,26,33,40]), 30, actual063);
-const blue062 = result062.blueNums;
-const { hits, misses } = result062;
-
-/* ── SCORE CARD ── */
-const scoreEl = document.getElementById('verify-score');
-if(scoreEl){
-  const total = actual063.size; // 6
-  const pct = Math.round(hits/total*100);
-  scoreEl.innerHTML = `
-    <div class="score-row">
-      <div class="score-box hit-box">
-        <div class="score-num">${hits}</div>
-        <div class="score-lbl">命中 ✓</div>
-      </div>
-      <div class="score-box miss-box">
-        <div class="score-num">${total-hits}</div>
-        <div class="score-lbl">未命中 ✗</div>
-      </div>
-      <div class="score-box pct-box">
-        <div class="score-num">${pct}%</div>
-        <div class="score-lbl">命中率</div>
-      </div>
-    </div>
-    <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
-    <p class="score-note">062期金色預測範圍 對比 063期實際開出號碼（${[...actual063].sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join('、')}）</p>
-  `;
+/* ── Helpers ── */
+function ballWaveClass(n){
+  const w = waveClass(n);
+  return w === 'wave-red' ? 'bwave-red' : w === 'wave-blue' ? 'bwave-blue' : 'bwave-green';
 }
-
-/* ── PREDICTION for 064 based on 063 blue zone ── */
-const drawn063set = new Set([3,6,9,10,28,29]);
-const blueCandidates = [...blue063].filter(n => !drawn063set.has(n)).sort((a,b)=>a-b);
-const outside062 = [8, 26]; // from node calc
-
+function makeDrawBall(n, isSpecial=false){
+  const d = document.createElement('div');
+  d.className = 'ball ' + ballWaveClass(n) + (isSpecial ? ' special-ball' : '');
+  d.textContent = String(n).padStart(2,'0');
+  return d;
+}
+function renderDrawBalls(containerId, draw){
+  const c = document.getElementById(containerId);
+  if(!c || !draw) return;
+  c.innerHTML = '';
+  draw.main.forEach(n => c.appendChild(makeDrawBall(n)));
+  const plus = document.createElement('span');
+  plus.className = 'plus'; plus.textContent = '＋';
+  c.appendChild(plus);
+  c.appendChild(makeDrawBall(draw.special, true));
+}
+function periodText(draw){
+  // draw: "26/063" → 第 063 期；date "2026-06-11" → 2026年6月11日
+  const num = draw.draw.split('/')[1] || draw.draw;
+  const [y,m,d] = draw.date.split('-');
+  const wd = ['日','一','二','三','四','五','六'][new Date(draw.date).getDay()];
+  return { num, full:`第 ${num} 期 ／ ${y}年${parseInt(m)}月${parseInt(d)}日（星期${wd}）`, tag:`${draw.draw} · ${y}年${parseInt(m)}月${parseInt(d)}日` };
+}
 function makePBall(n, dim=false) {
   const d = document.createElement('div');
   d.className = 'pball ' + waveClass(n) + (dim ? ' dim' : '');
   d.textContent = String(n).padStart(2,'0');
   return d;
 }
-
-// Candidate balls — big grid style
 function makeCBall(n) {
   const d = document.createElement('div');
   d.className = 'cball ' + waveClass(n);
   d.textContent = String(n).padStart(2,'0');
   return d;
 }
-
-// Orange repeat balls
 function makeOBall(n) {
   const d = document.createElement('div');
   d.className = 'oball ' + waveClass(n);
@@ -796,17 +763,97 @@ function makeOBall(n) {
   return d;
 }
 
-// Render blue zone candidates
-const predContainer = document.getElementById('predict-balls');
-document.getElementById('candidate-count').textContent = blueCandidates.length;
-blueCandidates.forEach(n => predContainer.appendChild(makeCBall(n)));
-
-// Render outside-blue repeat candidates
-const repeatContainer = document.getElementById('predict-repeat');
-outside062.forEach(n => repeatContainer.appendChild(makeOBall(n)));
-if(outside062.length===0){
-  repeatContainer.innerHTML='<span style="font-size:.72rem;color:rgba(255,255,255,.4)">（本期所有紅色號碼均在藍區內）</span>';
+/* Compute which main numbers are OUTSIDE the blue zone (repeat candidates) */
+function outsideBlueNums(mainArr){
+  const mainSet = new Set(mainArr);
+  const rowC = Array(SIZE).fill(0), colC = Array(SIZE).fill(0);
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) if(mainSet.has(grid[r][c])){rowC[r]++;colC[c]++;}
+  const bRows=new Set(rowC.map((v,i)=>v>=2?i:-1).filter(i=>i>=0));
+  const bCols=new Set(colC.map((v,i)=>v>=2?i:-1).filter(i=>i>=0));
+  const pos={};
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) pos[grid[r][c]]={r,c};
+  return mainArr.filter(n => !bRows.has(pos[n].r) && !bCols.has(pos[n].c));
 }
+
+/* ── MAIN: load data and render everything ── */
+async function init(){
+  let data;
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    data = await res.json();
+  } catch(e) {
+    document.getElementById('latest-period').textContent = '資料載入失敗，請重新整理';
+    console.error('Failed to load data.json', e);
+    return;
+  }
+
+  const latest = data.latest;
+  const prev = data.previous;
+  const nextNum = String(parseInt(latest.draw.split('/')[1]) + 1).padStart(3,'0');
+
+  /* Header + latest draw */
+  const lp = periodText(latest);
+  document.getElementById('latest-period').textContent = lp.full;
+  document.getElementById('latest-tag').textContent = latest.draw;
+  renderDrawBalls('latest-balls', latest);
+
+  /* Previous draw */
+  const pp = periodText(prev);
+  document.getElementById('prev-tag').textContent = pp.tag;
+  renderDrawBalls('prev-balls', prev);
+  document.getElementById('prev-grid-label').textContent =
+    `第${pp.num}期 江恩螺旋方圖 · 金色預測 vs 第${lp.num}期實際結果核實`;
+
+  /* Render latest grid (no verify) */
+  const resultLatest = renderGrid('spiral-grid', new Set(latest.main), latest.special);
+  const blueLatest = resultLatest.blueNums;
+
+  /* Render previous grid with latest actual results as verification */
+  const actualLatest = new Set(latest.main);
+  const resultPrev = renderGrid('spiral-grid-062', new Set(prev.main), prev.special, actualLatest);
+  const { hits } = resultPrev;
+
+  /* Score card */
+  const scoreEl = document.getElementById('verify-score');
+  if(scoreEl){
+    const total = actualLatest.size;
+    const pct = Math.round(hits/total*100);
+    scoreEl.innerHTML = `
+      <div class="score-row">
+        <div class="score-box hit-box"><div class="score-num">${hits}</div><div class="score-lbl">命中 ✓</div></div>
+        <div class="score-box miss-box"><div class="score-num">${total-hits}</div><div class="score-lbl">未命中 ✗</div></div>
+        <div class="score-box pct-box"><div class="score-num">${pct}%</div><div class="score-lbl">命中率</div></div>
+      </div>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+      <p class="score-note">第${pp.num}期金色預測範圍 對比 第${lp.num}期實際開出號碼（${[...actualLatest].sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join('、')}）</p>
+    `;
+  }
+  document.getElementById('verify-score-title') &&
+    (document.getElementById('verify-score-title').textContent =
+      `📊 預測核實 — 第${pp.num}期預測 vs 第${lp.num}期實際結果`);
+
+  /* Prediction for next period based on latest blue zone */
+  const drawnLatest = new Set(latest.main);
+  const blueCandidates = [...blueLatest].filter(n => !drawnLatest.has(n)).sort((a,b)=>a-b);
+  const outsideRepeat = outsideBlueNums(prev.main); // repeat candidates from prev period
+
+  document.getElementById('predict-title').textContent = `第${nextNum}期候選號碼`;
+  document.getElementById('predict-subtitle').textContent =
+    `根據第${lp.num}期江恩螺旋藍色範圍，以下號碼下期開出機會率較高`;
+
+  const predContainer = document.getElementById('predict-balls');
+  document.getElementById('candidate-count').textContent = blueCandidates.length;
+  blueCandidates.forEach(n => predContainer.appendChild(makeCBall(n)));
+
+  const repeatContainer = document.getElementById('predict-repeat');
+  if(outsideRepeat.length === 0){
+    repeatContainer.innerHTML='<span style="font-size:.72rem;color:rgba(255,255,255,.4)">（上期所有紅色號碼均在藍區內）</span>';
+  } else {
+    outsideRepeat.forEach(n => repeatContainer.appendChild(makeOBall(n)));
+  }
+}
+
+init();
 </script>
 </body>
 </html>

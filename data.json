@@ -1,0 +1,293 @@
+{
+  "updated": "2026-06-15T11:15:56.006Z",
+  "latest": {
+    "draw": "26/063",
+    "date": "2026-06-11",
+    "main": [
+      3,
+      6,
+      9,
+      10,
+      28,
+      29
+    ],
+    "special": 27,
+    "waves": {
+      "main": [
+        "blue",
+        "green",
+        "blue",
+        "blue",
+        "green",
+        "red"
+      ],
+      "special": "green"
+    }
+  },
+  "previous": {
+    "draw": "26/062",
+    "date": "2026-06-09",
+    "main": [
+      8,
+      11,
+      14,
+      26,
+      33,
+      40
+    ],
+    "special": 30,
+    "waves": {
+      "main": [
+        "red",
+        "green",
+        "blue",
+        "blue",
+        "green",
+        "red"
+      ],
+      "special": "red"
+    }
+  },
+  "history": [
+    {
+      "draw": "26/063",
+      "date": "2026-06-11",
+      "main": [
+        3,
+        6,
+        9,
+        10,
+        28,
+        29
+      ],
+      "special": 27,
+      "waves": {
+        "main": [
+          "blue",
+          "green",
+          "blue",
+          "blue",
+          "green",
+          "red"
+        ],
+        "special": "green"
+      }
+    },
+    {
+      "draw": "26/062",
+      "date": "2026-06-09",
+      "main": [
+        8,
+        11,
+        14,
+        26,
+        33,
+        40
+      ],
+      "special": 30,
+      "waves": {
+        "main": [
+          "red",
+          "green",
+          "blue",
+          "blue",
+          "green",
+          "red"
+        ],
+        "special": "red"
+      }
+    },
+    {
+      "draw": "26/061",
+      "date": "2026-06-06",
+      "main": [
+        5,
+        12,
+        19,
+        20,
+        34,
+        36
+      ],
+      "special": 46,
+      "waves": {
+        "main": [
+          "green",
+          "red",
+          "red",
+          "blue",
+          "red",
+          "blue"
+        ],
+        "special": "red"
+      }
+    },
+    {
+      "draw": "26/060",
+      "date": "2026-06-04",
+      "main": [
+        4,
+        7,
+        15,
+        37,
+        43,
+        47
+      ],
+      "special": 44,
+      "waves": {
+        "main": [
+          "blue",
+          "red",
+          "blue",
+          "blue",
+          "green",
+          "blue"
+        ],
+        "special": "green"
+      }
+    },
+    {
+      "draw": "26/059",
+      "date": "2026-06-02",
+      "main": [
+        9,
+        14,
+        16,
+        35,
+        37,
+        45
+      ],
+      "special": 20,
+      "waves": {
+        "main": [
+          "blue",
+          "blue",
+          "green",
+          "red",
+          "blue",
+          "red"
+        ],
+        "special": "blue"
+      }
+    },
+    {
+      "draw": "26/058",
+      "date": "2026-05-30",
+      "main": [
+        1,
+        12,
+        21,
+        39,
+        40,
+        41
+      ],
+      "special": 42,
+      "waves": {
+        "main": [
+          "red",
+          "red",
+          "green",
+          "green",
+          "red",
+          "blue"
+        ],
+        "special": "blue"
+      }
+    },
+    {
+      "draw": "26/057",
+      "date": "2026-05-28",
+      "main": [
+        7,
+        13,
+        25,
+        35,
+        40,
+        43
+      ],
+      "special": 47,
+      "waves": {
+        "main": [
+          "red",
+          "red",
+          "blue",
+          "red",
+          "red",
+          "green"
+        ],
+        "special": "blue"
+      }
+    },
+    {
+      "draw": "26/056",
+      "date": "2026-05-26",
+      "main": [
+        10,
+        11,
+        18,
+        32,
+        34,
+        47
+      ],
+      "special": 33,
+      "waves": {
+        "main": [
+          "blue",
+          "green",
+          "red",
+          "green",
+          "red",
+          "blue"
+        ],
+        "special": "green"
+      }
+    },
+    {
+      "draw": "26/055",
+      "date": "2026-05-23",
+      "main": [
+        2,
+        7,
+        20,
+        42,
+        47,
+        49
+      ],
+      "special": 8,
+      "waves": {
+        "main": [
+          "red",
+          "red",
+          "blue",
+          "blue",
+          "blue",
+          "green"
+        ],
+        "special": "red"
+      }
+    },
+    {
+      "draw": "26/054",
+      "date": "2026-05-21",
+      "main": [
+        5,
+        7,
+        13,
+        15,
+        27,
+        31
+      ],
+      "special": 16,
+      "waves": {
+        "main": [
+          "green",
+          "red",
+          "red",
+          "blue",
+          "green",
+          "blue"
+        ],
+        "special": "green"
+      }
+    }
+  ]
+}
