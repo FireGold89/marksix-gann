@@ -552,7 +552,7 @@ html { font-size: 100%; transition: font-size .2s; }
   </div>
 
   <div class="rule-card">
-    <strong>🔵 藍色範圍形成方法：</strong><br>
+    <strong>🟡 金色預測範圍形成方法：</strong><br>
     凡含有<strong>兩個或以上</strong>攪珠號碼的橫行或直列，整行／整列均標示為金色預測範圍。
   </div>
 
@@ -563,7 +563,7 @@ html { font-size: 100%; transition: font-size .2s; }
       <div class="leg-item"><div class="leg-dot r"></div>紅波頭獎號碼</div>
       <div class="leg-item"><div class="leg-dot b"></div>藍波頭獎號碼</div>
       <div class="leg-item"><div class="leg-dot g"></div>綠波頭獎號碼</div>
-      <div class="leg-item"><div class="leg-orange-ring"></div>不在藍區（下期重複機會高）</div>
+      <div class="leg-item"><div class="leg-orange-ring"></div>不在金色範圍（下期重複機會高）</div>
       <div class="leg-item"><div class="leg-special"></div>特別號碼（不計入）</div>
       <div class="leg-item"><div class="leg-dot blue-z"></div>預測範圍（金色閃光）</div>
       <div class="leg-item"><div class="leg-dot normal"></div>普通號碼</div>
@@ -597,7 +597,7 @@ html { font-size: 100%; transition: font-size .2s; }
       <div class="leg-item"><div class="leg-dot r"></div>紅波頭獎號碼</div>
       <div class="leg-item"><div class="leg-dot b"></div>藍波頭獎號碼</div>
       <div class="leg-item"><div class="leg-dot g"></div>綠波頭獎號碼</div>
-      <div class="leg-item"><div class="leg-orange-ring"></div>不在藍區（重複候選）</div>
+      <div class="leg-item"><div class="leg-orange-ring"></div>不在金色範圍（重複候選）</div>
       <div class="leg-item"><div class="leg-special"></div>特別號碼（不計入）</div>
       <div class="leg-item"><div class="leg-dot blue-z"></div>預測範圍（金色）</div>
       <div class="leg-item"><div class="leg-hit"></div>命中（綠色角標 ✓，063期開出）</div>
@@ -624,12 +624,12 @@ html { font-size: 100%; transition: font-size .2s; }
       <span id="predict-title">下期候選號碼</span>
       <span class="predict-icon">✦</span>
     </div>
-    <p class="predict-subtitle" id="predict-subtitle">根據本期江恩螺旋藍色範圍，以下號碼下期開出機會率較高</p>
+    <p class="predict-subtitle" id="predict-subtitle">根據本期江恩螺旋金色預測範圍，以下號碼下期開出機會率較高</p>
 
     <div class="predict-section-label">🟡 金色預測範圍候選（共 <span id="candidate-count">0</span> 個）</div>
     <div id="predict-balls" class="predict-balls-grid"></div>
 
-    <div class="predict-section-label" style="margin-top:16px;">🟠 重複開出候選（不在本期藍區的紅色號碼）</div>
+    <div class="predict-section-label" style="margin-top:16px;">🟠 重複開出候選（不在本期金色範圍的紅色號碼）</div>
     <div id="predict-repeat" class="balls-row" style="gap:8px; flex-wrap:wrap;"></div>
 
     <p class="predict-note">⚠️ 純屬娛樂及教學參考，六合彩為隨機遊戲，請理性投注。</p>
@@ -923,7 +923,7 @@ async function init(){
 
   document.getElementById('predict-title').textContent = `第${nextNum}期候選號碼`;
   document.getElementById('predict-subtitle').textContent =
-    `根據第${lp.num}期江恩螺旋藍色範圍，以下號碼下期開出機會率較高`;
+    `根據第${lp.num}期江恩螺旋金色預測範圍，以下號碼下期開出機會率較高`;
 
   const predContainer = document.getElementById('predict-balls');
   document.getElementById('candidate-count').textContent = blueCandidates.length;
@@ -931,7 +931,7 @@ async function init(){
 
   const repeatContainer = document.getElementById('predict-repeat');
   if(outsideRepeat.length === 0){
-    repeatContainer.innerHTML='<span style="font-size:.72rem;color:rgba(255,255,255,.4)">（上期所有紅色號碼均在藍區內）</span>';
+    repeatContainer.innerHTML='<span style="font-size:.72rem;color:rgba(255,255,255,.4)">（上期所有紅色號碼均在金色範圍內）</span>';
   } else {
     outsideRepeat.forEach(n => repeatContainer.appendChild(makeOBall(n)));
   }
